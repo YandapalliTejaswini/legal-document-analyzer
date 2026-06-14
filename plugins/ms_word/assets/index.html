@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Document Analyzer</title>
+    <link rel="stylesheet" href="css/app.css">
+    <!-- Office UI Fabric styles -->
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.min.css">
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.components.min.css">
+</head>
+<body class="ms-Fabric">
+    <div id="app" class="app-container">
+        <div class="ms-Grid">
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-sm12">
+                    <header class="app-header">
+                        <h1 class="ms-font-xxl">Legal Document Analyzer</h1>
+                    </header>
+                </div>
+            </div>
+
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-sm12">
+                    <div class="ms-MessageBar ms-MessageBar--info" id="statusMessage">
+                        <div class="ms-MessageBar-content">
+                            <div class="ms-MessageBar-icon">
+                                <i class="ms-Icon ms-Icon--Info"></i>
+                            </div>
+                            <div class="ms-MessageBar-text">
+                                Loading document...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content area -->
+            <div class="ms-Grid-row">
+                <div class="ms-Grid-col ms-sm12">
+                    <div class="app-main-content">
+                        <!-- Tabs -->
+                        <div class="ms-Pivot" id="appTabs">
+                            <ul class="ms-Pivot-links">
+                                <li class="ms-Pivot-link is-selected" data-content="analyze" id="analyzeTab">
+                                    Analyze
+                                </li>
+                                <li class="ms-Pivot-link" data-content="brief" id="briefTab">
+                                    Generate Brief
+                                </li>
+                                <li class="ms-Pivot-link" data-content="statutes" id="statutesTab">
+                                    Statutes
+                                </li>
+                                <li class="ms-Pivot-link" data-content="settings" id="settingsTab">
+                                    Settings
+                                </li>
+                            </ul>
+                            
+                            <!-- Tab content -->
+                            <div class="ms-Pivot-content" data-content="analyze">
+                                <div class="tab-content" id="analyzeContent">
+                                    <div class="ms-Grid-row">
+                                        <div class="ms-Grid-col ms-sm12">
+                                            <div class="ms-TextField">
+                                                <p class="ms-font-m-plus">Click the button below to analyze your document for legal references and statutes.</p>
+                                            </div>
+                                            <button class="ms-Button ms-Button--primary" id="analyzeButton">
+                                                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Search"></i></span>
+                                                <span class="ms-Button-label">Analyze Document</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="ms-Grid-row" id="analysisResults" style="display: none;">
+                                        <div class="ms-Grid-col ms-sm12">
+                                            <h2 class="ms-font-xl">Analysis Results</h2>
+                                            <div class="result-section">
+                                                <h3 class="ms-font-l">Document Information</h3>
+                                                <div id="documentInfo" class="info-panel"></div>
+                                            </div>
+                                            
+                                            <div class="result-section">
+                                                <h3 class="ms-font-l">Identified Statutes</h3>
+                                                <div id="statutesList" class="statutes-panel"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ms-Pivot-content" data-content="brief">
+                                <div class="tab-content" id="briefContent">
+                                    <div class="ms-Grid-row">
+                                        <div class="ms-Grid-col ms-sm12">
+                                            <div class="ms-TextField">
+                                                <label class="ms-Label">Brief Title</label>
+                                                <input class="ms-TextField-field" type="text" id="briefTitle" placeholder="Enter a title for your brief">
+                                            </div>
+                                            
+                                            <div class="ms-TextField ms-TextField--multiline">
+                                                <label class="ms-Label">Focus Areas (optional)</label>
+                                                <textarea class="ms-TextField-field" id="briefFocusAreas" placeholder="Enter specific areas to focus on, one per line"></textarea>
+                                            </div>
+                                            
+                                            <button class="ms-Button ms-Button--primary" id="generateBriefButton">
+                                                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Document"></i></span>
+                                                <span class="ms-Button-label">Generate Brief</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="ms-Grid-row" id="briefResults" style="display: none;">
+                                        <div class="ms-Grid-col ms-sm12">
+                                            <h2 class="ms-font-xl">Generated Brief</h2>
+                                            <div class="result-section">
+                                                <h3 class="ms-font-l" id="briefResultTitle"></h3>
+                                                <div id="briefContent" class="brief-panel"></div>
+                                                
+                                                <div class="ms-Grid-row">
+                                                    <div class="ms-Grid-col ms-sm12">
+                                                        <button class="ms-Button ms-Button--primary" id="insertBriefButton">
+                                                            <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--InsertSignatureLine"></i></span>
+                                                            <span class="ms-Button-label">Insert into Document</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ms-Pivot-content" data-content="statutes">
+                                <div class="tab-content" id="statutesContent">
+                                    <div class="ms-Grid-row">
+                                        <div class="ms-Grid-col ms-sm12">
+                                            <div class="ms-TextField">
+                                                <p class="ms-font-m-plus">Click the button below to validate all statutes in your document against the latest legal databases.</p>
+                                            </div>
+                                            <button class="ms-Button ms-Button--primary" id="validateStatutesButton">
+                                                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--CheckList"></i></span>
+                                                <span class="ms-Button-label">Validate Statutes</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="ms-Grid-row" id="statutesResults" style="display: none;">
+                                        <div class="ms-Grid-col ms-sm12">
+                                            <h2 class="ms-font-xl">Statute Validation</h2>
+                                            
+                                            <div class="result-section" id="statutesSummary"></div>
+                                            
+                                            <div class="result-section">
+                                                <h3 class="ms-font-l">Statute Details</h3>
+                                                <div id="validatedStatutesList" class="statutes-panel"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="ms-Pivot-content" data-content="settings">
+                                <div class="tab-content" id="settingsContent">
+                                    <div class="ms-Grid-row">
+                                        <div class="ms-Grid-col ms-sm12">
+                                            <div class="ms-TextField">
+                                                <label class="ms-Label">API URL</label>
+                                                <input class="ms-TextField-field" type="text" id="apiUrl" placeholder="https://example.com/api">
+                                            </div>
+                                            
+                                            <div class="ms-TextField">
+                                                <label class="ms-Label">API Key</label>
+                                                <input class="ms-TextField-field" type="password" id="apiKey" placeholder="Your API key">
+                                            </div>
+                                            
+                                            <button class="ms-Button ms-Button--primary" id="saveSettingsButton">
+                                                <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--Save"></i></span>
+                                                <span class="ms-Button-label">Save Settings</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading spinner overlay -->
+    <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="ms-Spinner ms-Spinner--large"></div>
+            <div class="loading-text ms-font-m-plus">Processing...</div>
+        </div>
+    </div>
+
+    <!-- Office UI Fabric JS -->
+    <script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
+    <!-- Office JS -->
+    <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+    <!-- App JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>
