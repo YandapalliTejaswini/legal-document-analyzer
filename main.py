@@ -2,7 +2,7 @@
 Main entry point for the Legal Data Insights application.
 """
 from app import app
- import os
+import os
 
 # Run the application when executed directly
 if __name__ == "__main__":
