@@ -104,6 +104,5 @@ LegalDataInsights provides a comprehensive RESTful API:
 - `/api/ml` - Machine learning operations
 - `/api/auth` - Authentication and authorization
 
-## License
-
-This project is proprietary software.
+## Author
+Tejaswini Yandapalli
